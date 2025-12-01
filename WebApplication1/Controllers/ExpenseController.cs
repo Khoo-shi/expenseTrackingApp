@@ -11,7 +11,6 @@ using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
-    [Authorize]
     public class ExpenseController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -48,6 +47,7 @@ namespace WebApplication1.Controllers
         }
 
         // GET: Expense/Create
+        [Authorize]
         public IActionResult Create()
         {
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Description");
@@ -57,6 +57,7 @@ namespace WebApplication1.Controllers
         // POST: Expense/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Amount,Date,CategoryId")] Expense expense)
@@ -72,6 +73,7 @@ namespace WebApplication1.Controllers
         }
 
         // GET: Expense/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -91,6 +93,7 @@ namespace WebApplication1.Controllers
         // POST: Expense/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Amount,Date,CategoryId")] Expense expense)
@@ -125,6 +128,7 @@ namespace WebApplication1.Controllers
         }
 
         // GET: Expense/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -144,6 +148,7 @@ namespace WebApplication1.Controllers
         }
 
         // POST: Expense/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
