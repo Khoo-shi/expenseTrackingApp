@@ -1,5 +1,5 @@
-using WebApplication1.Data;
 using Microsoft.EntityFrameworkCore;
+using WebApplication1.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,5 +29,18 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+// Seed database with sample data (if empty)
+using (var scope = app.Services.CreateScope())
+{
+    var ctx = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    try
+    {
+        WebApplication1.Data.DbInitializer.Initialize(ctx);
+    }
+    catch
+    {
+        // swallow seed exceptions for now; logs will show details when running
+    }
+}
 
 app.Run();

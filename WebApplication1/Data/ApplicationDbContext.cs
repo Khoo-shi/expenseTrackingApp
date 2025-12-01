@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using WebApplication1.Models;
 
 namespace WebApplication1.Data
 {
@@ -8,9 +9,18 @@ namespace WebApplication1.Data
             : base(options)
         {
         }
+        // DbSets for application
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Expense> Expenses { get; set; }
 
-        // Example DbSet
-        // Add your tables here
-        // public DbSet<Student> Students { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            
+            // Configure Expense Amount decimal precision
+            modelBuilder.Entity<Expense>()
+                .Property(e => e.Amount)
+                .HasPrecision(18, 2);
+        }
     }
 }

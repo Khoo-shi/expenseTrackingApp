@@ -1,0 +1,75 @@
+/* Custom styles for Expense Tracker */
+:root{
+  --tracker-primary:#0d6efd; /* bootstrap primary */
+  --tracker-accent:#0b5ed7;
+  --tracker-bg:#f8fafc;
+  --card-bg:#ffffff;
+}
+
+/* Navbar brand styling */
+.navbar-brand{
+  font-weight:700;
+  font-size:1.25rem;
+  letter-spacing:0.2px;
+}
+
+/* Slightly larger emoji and tighter alignment */
+.navbar-brand::first-letter{ }
+.navbar-brand .emoji{
+  font-size:1.25rem;
+  margin-right:0.35rem;
+}
+
+/* Footer adjustments */
+.footer{
+  background:transparent;
+  padding:1rem 0;
+}
+
+/* Page hero / quick-actions */
+.tracker-hero{
+  background: linear-gradient(90deg, rgba(13,110,253,0.04), rgba(11,93,215,0.02));
+  border-radius:0.5rem;
+  padding:1.25rem;
+  margin-bottom:1.25rem;
+}
+
+.tracker-cards .card{
+  border-radius:0.6rem;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.tracker-cards .card:hover{
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(12, 12, 15, 0.08);
+}
+
+/* Card icons */
+.tracker-card-icon{
+  font-size:1.5rem;
+  width:3rem;
+  height:3rem;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:0.6rem;
+  color:white;
+}
+.tracker-card-cat{ background: var(--tracker-primary);} 
+.tracker-card-exp{ background: var(--tracker-accent);} 
+
+/* Buttons */
+.btn-tracker{
+  background: var(--tracker-primary);
+  border-color: var(--tracker-primary);
+  color: #fff;
+}
+.btn-tracker-outline{
+  color: var(--tracker-primary);
+  border-color: var(--tracker-primary);
+}
+
+/* Small screens: compact navbar */
+@media (max-width:575px){
+  .navbar-brand{ font-size:1.05rem; }
+  .tracker-card-icon{ width:2.5rem; height:2.5rem; font-size:1.25rem; }
+}

@@ -1,8 +1,41 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Expense Tracker - Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h1 class="display-4 text-center mb-4">💰 Expense Tracker</h1>
+            <p class="lead text-center mb-5">Manage your expenses and categories efficiently</p>
+
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card border-primary">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">📂 Categories</h5>
+                            <p class="card-text">Organize your expenses by category</p>
+                            <a href="@Url.Action("Index", "Category")" class="btn btn-primary">Manage Categories</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card border-success">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">💸 Expenses</h5>
+                            <p class="card-text">Track and manage your daily expenses</p>
+                            <a href="@Url.Action("Index", "Expense")" class="btn btn-success">View Expenses</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-info" role="alert">
+                <h6 class="alert-heading">Quick Actions</h6>
+                <div class="btn-group btn-group-sm w-100" role="group">
+                    <a href="@Url.Action("Create", "Category")" class="btn btn-outline-info">+ New Category</a>
+                    <a href="@Url.Action("Create", "Expense")" class="btn btn-outline-info">+ New Expense</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
