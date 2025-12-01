@@ -39,13 +39,26 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
-// Seed database with sample data (if empty)
+// Seed database with sample data (if empty) and Identity users
 using (var scope = app.Services.CreateScope())
 {
     var ctx = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     try
     {
         WebApplication1.Data.DbInitializer.Initialize(ctx);
+    }
+    catch
+    {
+        // swallow seed exceptions for now; logs will show details when running
+    }
+}
+
+// Seed Identity user
+using (var scope = app.Services.CreateScope())
+{
+    try
+    {
+        await WebApplication1.Data.DbInitializer.InitializeIdentityAsync(scope.ServiceProvider);
     }
     catch
     {

@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using WebApplication1.Models;
 
 namespace WebApplication1.Data
@@ -29,6 +31,43 @@ namespace WebApplication1.Data
             };
             context.Expenses.AddRange(expenses);
             context.SaveChanges();
+        }
+
+        public static async Task InitializeIdentityAsync(IServiceProvider serviceProvider)
+        {
+            var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+            // Create roles if they don't exist
+            string[] roles = { "User", "Admin" };
+            foreach (var role in roles)
+            {
+                if (!await roleManager.RoleExistsAsync(role))
+                {
+                    await roleManager.CreateAsync(new IdentityRole(role));
+                }
+            }
+
+            // Create default user if it doesn't exist
+            string email = "dario@gc.ca";
+            string password = "Test123$";
+
+            var existingUser = await userManager.FindByEmailAsync(email);
+            if (existingUser == null)
+            {
+                var newUser = new IdentityUser
+                {
+                    UserName = email,
+                    Email = email,
+                    EmailConfirmed = true
+                };
+
+                var result = await userManager.CreateAsync(newUser, password);
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(newUser, "User");
+                }
+            }
         }
     }
 }
