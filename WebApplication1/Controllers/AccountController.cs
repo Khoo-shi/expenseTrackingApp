@@ -92,5 +92,70 @@ namespace WebApplication1.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
+
+        // GET: /Account/ExternalLogin
+        [HttpGet]
+        public IActionResult ExternalLogin(string provider, string returnUrl = null)
+        {
+            var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Account", new { returnUrl });
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            return new ChallengeResult(provider, properties);
+        }
+
+        // GET: /Account/ExternalLoginCallback
+        [HttpGet]
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
+        {
+            if (remoteError != null)
+            {
+                ModelState.AddModelError(string.Empty, $"Error from external provider: {remoteError}");
+                return RedirectToAction(nameof(Login));
+            }
+
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
+            // Sign in the user with this external login provider if already associated.
+            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+            if (result.Succeeded)
+            {
+                return LocalRedirect(returnUrl ?? "/");
+            }
+
+            // If the user does not have an account, then ask the user to create an account.
+            if (result.IsLockedOut)
+            {
+                return RedirectToAction(nameof(Lockout));
+            }
+
+            // Create new user from external login info
+            var user = new IdentityUser { UserName = info.Principal?.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value, Email = info.Principal?.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value };
+            
+            if (!string.IsNullOrEmpty(user.Email))
+            {
+                var createResult = await _userManager.CreateAsync(user);
+                if (createResult.Succeeded)
+                {
+                    var addLoginResult = await _userManager.AddLoginAsync(user, info);
+                    if (addLoginResult.Succeeded)
+                    {
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return LocalRedirect(returnUrl ?? "/");
+                    }
+                }
+            }
+
+            return RedirectToAction(nameof(Login));
+        }
+
+        // GET: /Account/Lockout
+        [HttpGet]
+        public IActionResult Lockout()
+        {
+            return View();
+        }
     }
 }
