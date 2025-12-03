@@ -91,3 +91,5 @@ node_modules/
 *.tmp
 *.temp
 *.log
+WebApplication1/appsettings.json
+WebApplication1/appsettings.Development.json
