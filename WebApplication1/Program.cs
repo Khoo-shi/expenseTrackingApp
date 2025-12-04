@@ -31,6 +31,14 @@ builder.Services.AddAuthentication(options =>
     options.ClientId = builder.Configuration["Authentication:Google:ClientId"] ?? string.Empty;
     options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"] ?? string.Empty;
     options.CallbackPath = new PathString("/signin-google");
+})
+
+// Add Facebook Authentication
+.AddFacebook(options =>
+{
+    options.AppId = builder.Configuration["Authentication:Facebook:AppId"] ?? string.Empty;
+    options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"] ?? string.Empty;
+    options.CallbackPath = new PathString("/signin-facebook");
 });
 
 var app = builder.Build();
@@ -81,6 +89,20 @@ using (var scope = app.Services.CreateScope())
     catch
     {
         // swallow seed exceptions for now; logs will show details when running
+    }
+}
+
+// Seed mock data for all user scenarios
+using (var scope = app.Services.CreateScope())
+{
+    var ctx = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    try
+    {
+        DbInitializer.SeedMockData(ctx);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error seeding mock data: {ex.Message}");
     }
 }
 

@@ -69,5 +69,41 @@ namespace WebApplication1.Data
                 }
             }
         }
+
+        public static void SeedMockData(ApplicationDbContext context)
+        {
+            // Ensure database is created
+            context.Database.EnsureCreated();
+
+            if (!context.Categories.Any())
+            {
+                var categories = new[]
+                {
+                    new Category { Name = "Groceries", Description = "Grocery shopping" },
+                    new Category { Name = "Entertainment", Description = "Movies, games, etc." },
+                    new Category { Name = "Health", Description = "Medical and fitness" },
+                    new Category { Name = "Education", Description = "Books and courses" }
+                };
+                context.Categories.AddRange(categories);
+                context.SaveChanges();
+            }
+
+            if (!context.Expenses.Any())
+            {
+                var expenses = new[]
+                {
+                    new Expense { Title = "Weekly Groceries", Amount = 85.00m, Date = DateTime.UtcNow.AddDays(-7), CategoryId = context.Categories.First(c => c.Name == "Groceries").Id },
+                    new Expense { Title = "Movie Night", Amount = 15.00m, Date = DateTime.UtcNow.AddDays(-3), CategoryId = context.Categories.First(c => c.Name == "Entertainment").Id },
+                    new Expense { Title = "Gym Membership", Amount = 45.00m, Date = DateTime.UtcNow.AddMonths(-1), CategoryId = context.Categories.First(c => c.Name == "Health").Id },
+                    new Expense { Title = "Online Course", Amount = 120.00m, Date = DateTime.UtcNow.AddMonths(-2), CategoryId = context.Categories.First(c => c.Name == "Education").Id },
+
+                    // Edge cases
+                    new Expense { Title = "", Amount = 0.00m, Date = DateTime.UtcNow, CategoryId = context.Categories.First(c => c.Name == "Groceries").Id }, // Empty title
+                    new Expense { Title = "Invalid Amount", Amount = -50.00m, Date = DateTime.UtcNow, CategoryId = context.Categories.First(c => c.Name == "Health").Id } // Negative amount
+                };
+                context.Expenses.AddRange(expenses);
+                context.SaveChanges();
+            }
+        }
     }
 }
